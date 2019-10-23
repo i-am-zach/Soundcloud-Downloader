@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
 import urllib.request
 import re
+import subprocess
 
+
+output_path = r'/home/zach/Python/Soundcloud Downloader/temp'
 url = r'https://soundcloud.com/zach-lefkovitz/sets/dl'
 sauce = urllib.request.urlopen(url).read()
 
@@ -34,7 +37,14 @@ del usernames[0]
 del song_urls[0]
 songs = []
 for i in range(len(song_names)):
-  songs.append({song_names[i]: {
+  songs.append({
+      'name': song_names[i],
       'username': usernames[i],
-      'url': 'soundcloud.com' + song_urls[i]
-  }})
+      'url': 'https://soundcloud.com' + song_urls[i]
+  }
+)
+
+
+# scdl -l *songurl* --path *path to folder*
+for song in songs:
+    subprocess.Popen(['scdl', '-l', song['url'], '--path', output_path])

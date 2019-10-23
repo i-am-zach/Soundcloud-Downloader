@@ -1,4 +1,5 @@
 lxml
 bs4
-requests
+urllib
 scdl
+subprocess
