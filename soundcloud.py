@@ -2,10 +2,32 @@ from bs4 import BeautifulSoup
 import urllib.request
 import re
 import subprocess
+import sys
+import os
+
+arg = list(sys.argv)
+commands = {
+    '--url': None,
+    '--output_dir': None
+}
+if len(arg) > 1:
+    for i in range(1, len(arg), 2):
+        assert len(arg) > i+1 and arg[i] and arg[i+1], 'Imcomplete arguments'
+        if arg[i] in commands.keys():
+            commands[arg[i]] = arg[i+1]
+assert commands['--url'], 'No url given, make sure to include --url [url]'
 
 
-output_path = r'/home/zach/Python/Soundcloud Downloader/temp'
-url = r'https://soundcloud.com/zach-lefkovitz/sets/dl'
+if commands['--output_dir']:
+    output_dir = commands['--output_dir']
+else:
+    output_dir = os.getcwd() + os.sep + 'Soundcloud-Downloaded-Songs'
+    try:
+        os.mkdir(output_dir)
+    except FileExistsError:
+        pass
+url = commands['--url']
+
 sauce = urllib.request.urlopen(url).read()
 
 soup = BeautifulSoup(sauce, 'lxml')
@@ -45,6 +67,8 @@ for i in range(len(song_names)):
 )
 
 
-# scdl -l *songurl* --path *path to folder*
+#scdl -l *songurl* --path *path to folder*
 for song in songs:
-    subprocess.Popen(['scdl', '-l', song['url'], '--path', output_path])
+    subprocess.Popen(['scdl', '-l', song['url'], '--path', output_dir])
+
+print('Completed Download')
