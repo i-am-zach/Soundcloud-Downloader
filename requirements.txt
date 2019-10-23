@@ -1,5 +1,0 @@
-lxml
-bs4
-urllib
-scdl
-subprocess
